@@ -1,4 +1,4 @@
-// backend/src/controllers/promoter.controller.js (UPDATED FOR TEAM-BASED MILESTONES)
+// backend/src/controllers/promoter.controller.js (UPDATED TO INCLUDE SPONSOR EMAIL)
 
 const db = require('../config/db.config');
 
@@ -15,21 +15,16 @@ const ensureIsPromoter = async (req, res, next) => {
     }
 };
 
-/**
- * ✅ NEW FUNCTION: Recursively counts the total ACTIVE members in a user's referral downline.
- * @param {number} promoterId - The ID of the promoter.
- * @returns {Promise<number>} - The total number of active users in the downline.
- */
 async function getActiveReferralTeamSize(promoterId) {
     const query = `
         WITH RECURSIVE referral_downline AS (
-            SELECT id, referred_by, status FROM users WHERE referred_by = ?
+            SELECT id FROM users WHERE referred_by = ?
             UNION ALL
-            SELECT u.id, u.referred_by, u.status
-            FROM users u
+            SELECT u.id FROM users u
             INNER JOIN referral_downline rd ON u.referred_by = rd.id
         )
-        SELECT COUNT(*) as team_size FROM referral_downline WHERE status = 'ACTIVE';
+        SELECT COUNT(*) as team_size FROM referral_downline rd
+        JOIN users u ON u.id = rd.id WHERE u.status = 'ACTIVE';
     `;
     
     try {
@@ -45,11 +40,9 @@ async function getActiveReferralTeamSize(promoterId) {
     }
 }
 
-// ✅ UPDATED CONTROLLER FUNCTION
 exports.getPromoterStats = [ensureIsPromoter, async (req, res) => {
     const promoterId = req.user.id;
     try {
-        // --- Existing Calculations ---
         const usdtCommissionResult = await db('promoter_commissions').where('promoter_id', promoterId).sum('commission_amount as total').first();
         const totalUsdtCommission = parseFloat(usdtCommissionResult.total || 0);
 
@@ -59,16 +52,14 @@ exports.getPromoterStats = [ensureIsPromoter, async (req, res) => {
         const milestonesSetting = await db('system_settings').where('setting_key', 'promoter_milestones_config').first();
         const milestonesConfig = JSON.parse(milestonesSetting?.setting_value || '{}');
         
-        // --- ✅ NEW CALCULATION FOR MILESTONES ---
-        // We calculate both direct active and total active team size
         const { directActiveReferrals } = await db('users').where({ referred_by: promoterId, status: 'ACTIVE' }).count('* as directActiveReferrals').first();
         const totalActiveTeamSize = await getActiveReferralTeamSize(promoterId);
 
         res.json({
             totalUsdtCommission: totalUsdtCommission.toFixed(2),
             totalStblCommission: totalStblCommission.toFixed(4),
-            directActiveReferralsCount: parseInt(directActiveReferrals, 10) || 0, // This can be used for other stats if needed
-            totalActiveTeamSize: totalActiveTeamSize, // THIS IS THE NEW VALUE FOR MILESTONES
+            directActiveReferralsCount: parseInt(directActiveReferrals, 10) || 0,
+            totalActiveTeamSize: totalActiveTeamSize,
             milestonesConfig
         });
     } catch (error) {
@@ -77,15 +68,21 @@ exports.getPromoterStats = [ensureIsPromoter, async (req, res) => {
     }
 }];
 
+
+// ✅✅✅ THIS IS THE UPDATED FUNCTION ✅✅✅
 exports.getPromoterCommissions = [ensureIsPromoter, async (req, res) => {
     const promoterId = req.user.id;
     try {
         const commissions = await db('promoter_commissions as pc')
-            .join('users as u', 'pc.from_user_id', 'u.id')
+            // Join to get the new user's email ('From User')
+            .join('users as from_user', 'pc.from_user_id', 'from_user.id')
+            // Left Join to get the sponsor's email
+            .leftJoin('users as sponsor', 'from_user.referred_by', 'sponsor.id')
             .where('pc.promoter_id', promoterId)
             .select(
                 'pc.id',
-                'u.email as from_user_email',
+                'from_user.email as from_user_email',
+                'sponsor.email as sponsor_email', // <-- ADD THIS LINE
                 'pc.commission_amount',
                 'pc.token_commission_amount',
                 'pc.commission_type',

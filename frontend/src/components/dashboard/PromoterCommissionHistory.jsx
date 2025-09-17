@@ -1,21 +1,24 @@
+// frontend/src/components/dashboard/PromoterCommissionHistory.jsx (UPDATED WITH SPONSOR COLUMN)
+
 import React, { useState, useEffect } from 'react';
 import apiService from '../../services/api';
 import EmptyState from '../EmptyState';
-import '../../pages/DashboardPage.css'; // ✅✅✅ सही पाथ
+import '../../pages/DashboardPage.css';
 
 const PromoterCommissionHistory = ({ isOpen }) => {
     const [commissions, setCommissions] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        if (isOpen && commissions.length === 0) {
+        // We will now always fetch on open to get the latest data.
+        if (isOpen) {
             setIsLoading(true);
             apiService.getPromoterCommissions()
                 .then(res => setCommissions(res.data))
                 .catch(err => console.error("Failed to fetch promoter commission history", err))
                 .finally(() => setIsLoading(false));
         }
-    }, [isOpen, commissions.length]);
+    }, [isOpen]);
 
     if (!isOpen) return null;
 
@@ -31,7 +34,8 @@ const PromoterCommissionHistory = ({ isOpen }) => {
                         <thead>
                             <tr>
                                 <th>Date</th>
-                                <th>From User</th>
+                                <th>From User (New Member)</th>
+                                <th>Sponsor (Referrer)</th> {/* ✅ ADDED HEADER */}
                                 <th>Type</th>
                                 <th>USDT Earned</th>
                                 <th>STBL Earned</th>
@@ -42,6 +46,8 @@ const PromoterCommissionHistory = ({ isOpen }) => {
                                 <tr key={tx.id}>
                                     <td>{new Date(tx.created_at).toLocaleString()}</td>
                                     <td>{tx.from_user_email}</td>
+                                    {/* ✅ ADDED DATA CELL */}
+                                    <td>{tx.sponsor_email || 'System/Direct'}</td>
                                     <td>
                                         <span className="transaction-type-badge" style={{textTransform: 'capitalize'}}>
                                             {tx.commission_type.replace(/_/g, ' ').toLowerCase()}
