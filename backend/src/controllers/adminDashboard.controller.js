@@ -1,17 +1,17 @@
-// backend/src/controllers/adminDashboard.controller.js (FINAL AND CORRECTED VERSION)
+// backend/src/controllers/adminDashboard.controller.js (IMPLEMENTING YOUR FINAL LOGIC)
 
 const db = require('../config/db.config');
 const { logAdminActivity } = require('../services/adminActivity.service');
 
 exports.getDashboardStats = async (req, res) => {
     try {
-        // --- User and Withdrawal Stats ---
+        // --- Base Stats ---
         const maxIdResult = await db('users').max('id as maxId').first();
         const totalUsers = maxIdResult.maxId ? maxIdResult.maxId - 1 : 0;
         const { activeUsers } = await db('users').where('status', 'ACTIVE').count('* as activeUsers').first();
         const { pendingWithdrawals } = await db('withdrawals').where('status', 'PENDING').count('* as pendingWithdrawals').first();
 
-        // --- ✅✅✅ START: CORRECTED System Wallet Balance Calculation ✅✅✅ ---
+        // --- Turnover and Outflow Calculations ---
         const totalTurnover = parseFloat(activeUsers || 0) * 20.0;
 
         const totalWithdrawnResult = await db('withdrawals')
@@ -20,22 +20,18 @@ exports.getDashboardStats = async (req, res) => {
             .first();
         const totalWithdrawnByUsers = parseFloat(totalWithdrawnResult.total || 0);
 
-        // This calculation is still needed for the "Paid to Promoters" card
-        const promoterPayoutsResult = await db('admin_earnings')
-            .whereIn('type', ['PROMOTER_PAYOUT', 'PROMOTER_TEAM_PAYOUT'])
-            .sum('amount as total')
-            .first();
-        const totalPaidToPromoters = Math.abs(parseFloat(promoterPayoutsResult.total || 0));
-
-        // ✅ YOUR NEW FORMULA: Turnover - External Withdrawals = System Balance
+        // --- ✅✅✅ YOUR CORRECT FORMULA FOR "System Wallet Balance" ✅✅✅ ---
+        // This represents the total external funds held by the system.
         const systemWalletBalance = totalTurnover - totalWithdrawnByUsers;
-        // --- ✅✅✅ END: CORRECTED System Wallet Balance Calculation ✅✅✅ ---
+        // --- ✅✅✅ END OF CALCULATION ✅✅✅ ---
         
-        // --- Other Card Calculations (no changes here) ---
+        // --- Other Card Calculations (These remain the same for individual card display) ---
         const adminJoiningFeesResult = await db('admin_earnings').where('type', 'JOINING_FEE').sum('amount as total').first();
         const adminDirectReferralFeesResult = await db('admin_earnings').where({ type: 'DIRECT_REFERRAL', sponsor_id: 1 }).sum('amount as total').first();
+        // The "Admin Withdrawal Fees" card will correctly show the sum of both withdrawal and P2P fees.
         const adminWithdrawalFeesResult = await db('admin_earnings').whereIn('type', ['WITHDRAWAL_FEE', 'P2P_FEE']).sum('amount as total').first();
         const userReferralPayoutsResult = await db('admin_earnings').where('type', 'DIRECT_REFERRAL').andWhereNot('sponsor_id', 1).sum('amount as total').first();
+        const promoterPayoutsResult = await db('admin_earnings').whereIn('type', ['PROMOTER_PAYOUT', 'PROMOTER_TEAM_PAYOUT']).sum('amount as total').first();
         const totalPoolPayoutsResult = await db('admin_earnings').where('type', 'POOL_PAYOUT').sum('amount as totalPayouts').first();
         
         const totalPoolContribution = parseFloat(activeUsers || 0) * 10.0;
@@ -52,12 +48,12 @@ exports.getDashboardStats = async (req, res) => {
             activeUsers: parseInt(activeUsers || 0),
             pendingWithdrawals: parseInt(pendingWithdrawals || 0),
             
-            systemWalletBalance: systemWalletBalance.toFixed(2), // This now uses your correct formula
+            systemWalletBalance: systemWalletBalance.toFixed(2), // This is now correct according to your logic.
             
             adminJoiningFees: parseFloat(adminJoiningFeesResult.total || 0).toFixed(2),
             adminDirectReferralFees: parseFloat(adminDirectReferralFeesResult.total || 0).toFixed(2),
             userReferralBonusPayouts: Math.abs(parseFloat(userReferralPayoutsResult.total || 0)).toFixed(2),
-            totalPromoterPayouts: totalPaidToPromoters.toFixed(2),
+            totalPromoterPayouts: Math.abs(parseFloat(promoterPayoutsResult.total || 0)).toFixed(2),
             adminWithdrawalFees: parseFloat(adminWithdrawalFeesResult.total || 0).toFixed(2),
             totalTurnover: totalTurnover.toFixed(2),
             totalPoolContribution: totalPoolContribution.toFixed(2),
@@ -73,8 +69,7 @@ exports.getDashboardStats = async (req, res) => {
     }
 };
 
-// --- Other functions remain unchanged ---
-
+// ... (rest of the file remains unchanged) ...
 exports.getFinancialReport = async (req, res) => {
     try {
         const incomeResult = await db('admin_earnings').whereIn('type', ['JOINING_FEE', 'WITHDRAWAL_FEE', 'P2P_FEE']).orWhere({ type: 'DIRECT_REFERRAL', sponsor_id: 1 }).sum('amount as total').first();
