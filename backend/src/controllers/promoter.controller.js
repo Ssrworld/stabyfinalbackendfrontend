@@ -1,4 +1,4 @@
-// backend/src/controllers/promoter.controller.js (A-to-Z CODE WITH TEAM SIZE CALCULATION)
+// backend/src/controllers/promoter.controller.js (UPDATED FOR TEAM-BASED MILESTONES)
 
 const db = require('../config/db.config');
 
@@ -15,49 +15,41 @@ const ensureIsPromoter = async (req, res, next) => {
     }
 };
 
-// ✅✅✅ START: टीम के आकार की गणना करने के लिए नया फंक्शन ✅✅✅
 /**
- * Recursively counts the size of a user's referral downline (excluding the user themselves).
- * This function uses a raw SQL query with a Recursive Common Table Expression (CTE) for performance.
+ * ✅ NEW FUNCTION: Recursively counts the total ACTIVE members in a user's referral downline.
  * @param {number} promoterId - The ID of the promoter.
- * @returns {Promise<number>} - The total number of users in the downline.
+ * @returns {Promise<number>} - The total number of active users in the downline.
  */
-async function getReferralTeamSize(promoterId) {
-    // This query finds all users referred by the promoter, and then all users referred by them, and so on.
+async function getActiveReferralTeamSize(promoterId) {
     const query = `
         WITH RECURSIVE referral_downline AS (
-            -- Anchor: Start with the promoter's direct referrals
-            SELECT id, referred_by FROM users WHERE referred_by = ?
+            SELECT id, referred_by, status FROM users WHERE referred_by = ?
             UNION ALL
-            -- Recursive step: Find users referred by the people already in the downline
-            SELECT u.id, u.referred_by
+            SELECT u.id, u.referred_by, u.status
             FROM users u
             INNER JOIN referral_downline rd ON u.referred_by = rd.id
         )
-        SELECT COUNT(*) as team_size FROM referral_downline;
+        SELECT COUNT(*) as team_size FROM referral_downline WHERE status = 'ACTIVE';
     `;
     
     try {
         const result = await db.raw(query, [promoterId]);
-        // The result structure can vary between DB drivers (pg vs mysql2)
-        // This handles both cases safely.
         if (db.client.config.client === 'pg') {
             return parseInt(result.rows[0].team_size, 10) || 0;
         } else {
             return parseInt(result[0][0].team_size, 10) || 0;
         }
     } catch (error) {
-        console.error(`Failed to calculate team size for promoter ${promoterId}`, error);
-        return 0; // Return 0 on error
+        console.error(`Failed to calculate active team size for promoter ${promoterId}`, error);
+        return 0;
     }
 }
-// ✅✅✅ END: नया फंक्शन ✅✅✅
 
-
+// ✅ UPDATED CONTROLLER FUNCTION
 exports.getPromoterStats = [ensureIsPromoter, async (req, res) => {
     const promoterId = req.user.id;
     try {
-        // --- मौजूदा गणनाएं ---
+        // --- Existing Calculations ---
         const usdtCommissionResult = await db('promoter_commissions').where('promoter_id', promoterId).sum('commission_amount as total').first();
         const totalUsdtCommission = parseFloat(usdtCommissionResult.total || 0);
 
@@ -66,15 +58,17 @@ exports.getPromoterStats = [ensureIsPromoter, async (req, res) => {
 
         const milestonesSetting = await db('system_settings').where('setting_key', 'promoter_milestones_config').first();
         const milestonesConfig = JSON.parse(milestonesSetting?.setting_value || '{}');
-
-        // ✅✅✅ START: नई गणना को यहाँ कॉल करें ✅✅✅
-        const totalTeamSize = await getReferralTeamSize(promoterId);
-        // ✅✅✅ END: नई गणना ✅✅✅
+        
+        // --- ✅ NEW CALCULATION FOR MILESTONES ---
+        // We calculate both direct active and total active team size
+        const { directActiveReferrals } = await db('users').where({ referred_by: promoterId, status: 'ACTIVE' }).count('* as directActiveReferrals').first();
+        const totalActiveTeamSize = await getActiveReferralTeamSize(promoterId);
 
         res.json({
             totalUsdtCommission: totalUsdtCommission.toFixed(2),
             totalStblCommission: totalStblCommission.toFixed(4),
-            totalTeamSize, // <-- नई जानकारी को प्रतिक्रिया में जोड़ें
+            directActiveReferralsCount: parseInt(directActiveReferrals, 10) || 0, // This can be used for other stats if needed
+            totalActiveTeamSize: totalActiveTeamSize, // THIS IS THE NEW VALUE FOR MILESTONES
             milestonesConfig
         });
     } catch (error) {
