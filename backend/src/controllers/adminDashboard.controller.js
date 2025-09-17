@@ -1,4 +1,4 @@
-// backend/src/controllers/adminDashboard.controller.js (FINAL A-to-Z CODE)
+// backend/src/controllers/adminDashboard.controller.js (FINAL AND CORRECTED VERSION)
 
 const db = require('../config/db.config');
 const { logAdminActivity } = require('../services/adminActivity.service');
@@ -11,7 +11,7 @@ exports.getDashboardStats = async (req, res) => {
         const { activeUsers } = await db('users').where('status', 'ACTIVE').count('* as activeUsers').first();
         const { pendingWithdrawals } = await db('withdrawals').where('status', 'PENDING').count('* as pendingWithdrawals').first();
 
-        // --- ✅✅✅ START: System Wallet Balance Calculation ✅✅✅ ---
+        // --- ✅✅✅ START: CORRECTED System Wallet Balance Calculation ✅✅✅ ---
         const totalTurnover = parseFloat(activeUsers || 0) * 20.0;
 
         const totalWithdrawnResult = await db('withdrawals')
@@ -20,17 +20,18 @@ exports.getDashboardStats = async (req, res) => {
             .first();
         const totalWithdrawnByUsers = parseFloat(totalWithdrawnResult.total || 0);
 
+        // This calculation is still needed for the "Paid to Promoters" card
         const promoterPayoutsResult = await db('admin_earnings')
             .whereIn('type', ['PROMOTER_PAYOUT', 'PROMOTER_TEAM_PAYOUT'])
             .sum('amount as total')
             .first();
         const totalPaidToPromoters = Math.abs(parseFloat(promoterPayoutsResult.total || 0));
 
-        const totalSystemOutflow = totalWithdrawnByUsers + totalPaidToPromoters;
-        const systemWalletBalance = totalTurnover - totalSystemOutflow;
-        // --- ✅✅✅ END: System Wallet Balance Calculation ✅✅✅ ---
+        // ✅ YOUR NEW FORMULA: Turnover - External Withdrawals = System Balance
+        const systemWalletBalance = totalTurnover - totalWithdrawnByUsers;
+        // --- ✅✅✅ END: CORRECTED System Wallet Balance Calculation ✅✅✅ ---
         
-        // --- Other Card Calculations ---
+        // --- Other Card Calculations (no changes here) ---
         const adminJoiningFeesResult = await db('admin_earnings').where('type', 'JOINING_FEE').sum('amount as total').first();
         const adminDirectReferralFeesResult = await db('admin_earnings').where({ type: 'DIRECT_REFERRAL', sponsor_id: 1 }).sum('amount as total').first();
         const adminWithdrawalFeesResult = await db('admin_earnings').whereIn('type', ['WITHDRAWAL_FEE', 'P2P_FEE']).sum('amount as total').first();
@@ -51,7 +52,7 @@ exports.getDashboardStats = async (req, res) => {
             activeUsers: parseInt(activeUsers || 0),
             pendingWithdrawals: parseInt(pendingWithdrawals || 0),
             
-            systemWalletBalance: systemWalletBalance.toFixed(2), // This is the new, correct property
+            systemWalletBalance: systemWalletBalance.toFixed(2), // This now uses your correct formula
             
             adminJoiningFees: parseFloat(adminJoiningFeesResult.total || 0).toFixed(2),
             adminDirectReferralFees: parseFloat(adminDirectReferralFeesResult.total || 0).toFixed(2),
@@ -71,6 +72,8 @@ exports.getDashboardStats = async (req, res) => {
         res.status(500).json({ message: 'Server error fetching admin stats', error: e.message });
     }
 };
+
+// --- Other functions remain unchanged ---
 
 exports.getFinancialReport = async (req, res) => {
     try {
