@@ -1,16 +1,14 @@
-// backend/src/scripts/payoutProcessor.js
+// backend/src/scripts/payoutProcessor.js (UPDATED with fee crediting logic)
 
 const path = require('path');
-// --- समाधान: dotenv को केवल तभी लोड करें जब NODE_ENV 'production' न हो ---
 if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config({ path: path.join(__dirname, '..', '..', '..', '.env') });
 }
 
 const { ethers } = require('ethers');
 const db = require('../config/db.config'); 
-// --- ✅ समाधान: दोनों ईमेल फंक्शन्स को इम्पोर्ट करें ---
 const { sendWithdrawalSuccessEmail, sendWithdrawalFailedEmail } = require('../services/email.service');
-const { hotWallet } = require('./blockchainListener'); // हॉट वॉलेट को इम्पोर्ट करें
+const { hotWallet } = require('./blockchainListener');
 
 const USDT_CONTRACT_ADDRESS = '0x55d398326f99059fF775485246999027B3197955';
 const USDT_DECIMALS = 18;
@@ -28,14 +26,12 @@ async function processPayouts() {
         await db.transaction(async trx => {
             const pendingWithdrawals = await trx('withdrawals as w')
                 .join('users as u', 'w.user_id', 'u.id')
-                // --- ✅ समाधान: admin_fee को भी सेलेक्ट करें ---
                 .select('w.id', 'w.user_id', 'w.amount', 'w.final_amount', 'w.admin_fee', 'u.payout_wallet', 'u.email')
                 .where('w.status', 'PENDING')
                 .forUpdate();
 
             if (pendingWithdrawals.length === 0) {
-                // console.log(`[Payout] No pending withdrawals to process. Cycle finished.`); // साइलेंट मोड के लिए टिप्पणी की गई
-                return; // कोई काम नहीं, सफलतापूर्वक बाहर निकलें
+                return;
             }
             
             console.log(`[Payout] Found ${pendingWithdrawals.length} pending withdrawals to process.`);
@@ -61,7 +57,18 @@ async function processPayouts() {
                         tx_hash: tx.hash
                     });
                     
-                    // --- ✅ समाधान: sendWithdrawalSuccessEmail को सही पैरामीटर के साथ कॉल करें ---
+                    // ✅✅✅ THIS IS THE CRITICAL FIX ✅✅✅
+                    // Credit the fee to the admin ONLY after a successful transaction
+                    if (wd.admin_fee > 0) {
+                        await trx('admin_earnings').insert({
+                            user_id: wd.user_id,
+                            type: 'WITHDRAWAL_FEE',
+                            amount: wd.admin_fee,
+                            notes: `Fee for successful withdrawal #${wd.id} of $${wd.amount}`
+                        });
+                        console.log(`[Payout] ✅ CREDITED: Admin earned $${wd.admin_fee.toFixed(2)} fee for withdrawal ID ${wd.id}.`);
+                    }
+                    
                     await sendWithdrawalSuccessEmail(wd.email, wd.amount, wd.final_amount, wd.admin_fee, tx.hash);
                     console.log(`[Payout] ✅ SUCCESS: Withdrawal ID ${wd.id} completed. Tx: ${tx.hash}`);
 
@@ -79,8 +86,7 @@ async function processPayouts() {
                     });
                     await trx('users').where('id', wd.user_id).increment('withdrawable_balance', wd.amount);
                     console.log(`[Payout] 🔄 REFUNDED: User ${wd.user_id} refunded ${wd.amount}.`);
-
-                    // --- ✅ समाधान: विफलता की स्थिति में उपयोगकर्ता को ईमेल भेजें ---
+                    
                     await sendWithdrawalFailedEmail(wd.email, wd.amount);
                 }
             }
