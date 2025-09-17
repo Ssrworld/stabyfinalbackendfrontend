@@ -1,0 +1,140 @@
+/* frontend/src/components/Layout.css */
+
+/* Vanta.js बैकग्राउंड के लिए कंटेनर */
+.vanta-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1; /* इसे बाकी सब चीजों के पीछे रखें */
+}
+
+/* मुख्य लेआउट कंटेनर को पोजिशन दें */
+.layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  position: relative; /* z-index के काम करने के लिए */
+  z-index: 1;
+}
+
+header {
+  padding: 1rem 2rem;
+  background-color: rgba(13, 12, 34, 0.8); /* सेमी-ट्रांसपेरेंट ताकि बैकग्राउंड दिखे */
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  backdrop-filter: blur(10px);
+}
+
+.logo a {
+  font-size: 1.5rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--text-color);
+  text-decoration: none;
+}
+
+.logo-image {
+  height: 40px;
+}
+
+header nav {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+main {
+  flex-grow: 1;
+  padding-top: 80px;
+  background: transparent; /* Main का बैकग्राउंड हटा दें ताकि Vanta दिखे */
+}
+
+/* ... (बाकी सभी नेविगेशन स्टाइल वैसे ही रहेंगे) ... */
+
+.nav-link {
+  color: var(--text-color-dark);
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  padding: 0.5rem 0;
+  position: relative;
+}
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--primary-color);
+  transition: width 0.3s ease;
+}
+.nav-link:hover::after,
+.nav-link.active::after {
+  width: 100%;
+}
+.nav-link:hover,
+.nav-link.active {
+  color: var(--text-color);
+}
+.nav-button {
+  padding: 0.6rem 1.5rem;
+  border-radius: 50px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+.nav-button.register {
+  background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+  color: white;
+  box-shadow: 0 4px 15px rgba(126, 34, 206, 0.3);
+}
+.nav-button.register:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(126, 34, 206, 0.5);
+}
+.nav-button.logout {
+  background-color: transparent;
+  border-color: var(--primary-color);
+  color: var(--primary-color-light);
+}
+.nav-button.logout:hover {
+  background-color: var(--primary-color);
+  color: white;
+  transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+  header {
+    padding: 0.75rem 1rem;
+  }
+  header nav {
+      gap: 0.75rem;
+  }
+  .logo-image {
+      height: 35px;
+  }
+  .nav-button, .nav-link {
+      padding: 0.5rem 1rem;
+      font-size: 0.8rem;
+  }
+  main {
+    padding-top: 65px;
+  }
+}

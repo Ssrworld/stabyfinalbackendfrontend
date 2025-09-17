@@ -1,0 +1,55 @@
+/* frontend/src/components/HowItWorks.css (FINAL CODE) */
+
+.how-it-works-section {
+  /* --- ✅ SAMADHAN: Padding yahaan se hata di gayi hai --- */
+  /* Ab spacing HomePage.jsx ke .section-container se aayegi */
+  text-align: center;
+}
+
+.how-it-works-section h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem; /* Subtitle se pehle thoda space */
+}
+
+/* Note: .section-subtitle ab index.css se style ho raha hai */
+
+.steps-container {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin-top: 3rem; /* Subtitle ke baad space */
+}
+
+.step-card {
+  background-color: var(--surface-color);
+  padding: 2rem;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  max-width: 350px;
+  flex-grow: 1;
+}
+
+.step-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0 auto 1.5rem auto;
+}
+
+.step-card h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.step-card p {
+  color: var(--text-color-dark);
+  line-height: 1.6;
+}

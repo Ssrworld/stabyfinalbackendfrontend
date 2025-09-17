@@ -1,0 +1,391 @@
+/* frontend/src/pages/admin/Admin.css (FULL FILE, UPDATED) */
+
+/* ==========================================================================
+   Admin General Styles
+   ========================================================================== */
+
+.admin-page-container {
+    width: 100%;
+}
+
+.section-title {
+    font-size: 1.5rem;
+    margin-top: 2.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.75rem;
+    color: var(--text-color);
+}
+
+.page-description {
+    margin-bottom: 2rem;
+    font-size: 1rem;
+    color: var(--text-color-dark);
+}
+
+/* ==========================================================================
+   Stat Cards (Dashboard & Financial Report)
+   ========================================================================== */
+
+.admin-stats-grid {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.admin-stats-grid.four-cols {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.admin-stats-grid.five-cols {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.admin-stat-card {
+    background: var(--surface-color);
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.stat-card-link {
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stat-card-link:hover .admin-stat-card {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.stat-icon {
+    font-size: 2rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.stat-value {
+    font-size: 2.2rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    color: var(--text-color-light);
+}
+
+.stat-title {
+    color: var(--text-color-dark);
+    font-size: 0.9rem;
+}
+
+.report-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.report-card {
+    background-color: var(--surface-color-dark);
+    border-radius: 8px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    border-left: 4px solid;
+}
+.report-card.color-green { border-color: var(--success-color); }
+.report-card.color-red { border-color: var(--danger-color); }
+.report-card.color-blue { border-color: var(--primary-color); }
+
+.report-card-icon { font-size: 2rem; color: var(--text-color-light); }
+.report-card-content { display: flex; flex-direction: column; }
+.report-card-value { font-size: 2.2rem; font-weight: bold; color: var(--text-color-light); }
+.report-card-title { font-size: 0.9rem; color: var(--text-color-dark); }
+
+.note-box {
+    background-color: var(--surface-color-dark);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-top: 2rem;
+    font-size: 0.9rem;
+}
+.note-box h4 { margin: 0 0 0.5rem 0; }
+.note-box ul { margin: 0; padding-left: 1.2rem; color: var(--text-color-dark); }
+.note-box li { margin-bottom: 0.5rem; }
+
+/* ==========================================================================
+   Admin Tables
+   ========================================================================== */
+
+.admin-table-container {
+    background-color: var(--surface-color);
+    border-radius: 8px;
+    overflow-x: auto;
+    border: 1px solid var(--border-color);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table th, table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+    white-space: nowrap;
+}
+
+table th {
+    background-color: #0d0c22;
+    font-weight: 600;
+    color: var(--text-color-dark);
+}
+
+table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+table tbody tr:hover {
+    background-color: #2a2a4a;
+}
+
+.wallet-address {
+    font-family: monospace;
+    font-size: 0.85rem;
+    word-break: break-all;
+}
+
+.status-badge, .tx-type-badge, .transaction-type-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+/* ✅✅✅ START: IMPROVED BADGE STYLES ✅✅✅ */
+.status-badge.active { 
+    background-color: rgba(46, 204, 113, 0.15); /* Lighter, transparent background */
+    color: #2ecc71; /* Brighter green text */
+    font-weight: 700; /* Bolder text */
+}
+.status-badge.pending { 
+    background-color: rgba(255, 143, 0, 0.15); 
+    color: #ff8f00; 
+    font-weight: 700;
+}
+.status-badge.suspended, .status-badge.failed { 
+    background-color: rgba(244, 67, 54, 0.15); 
+    color: #f44336; 
+    font-weight: 700;
+}
+/* ✅✅✅ END: IMPROVED BADGE STYLES ✅✅✅ */
+
+.tx-type-badge.deposit { background-color: rgba(76, 175, 80, 0.2); color: #81c784; }
+.tx-type-badge.withdrawal { background-color: rgba(244, 67, 54, 0.2); color: #e57373; }
+.transaction-type-badge { background-color: var(--primary-color-dark); text-transform: capitalize; }
+
+tr.suspended-row {
+    background-color: rgba(244, 67, 54, 0.1);
+    text-decoration: line-through;
+    color: var(--text-color-dark);
+}
+tr.suspended-row:hover {
+    background-color: rgba(244, 67, 54, 0.2);
+}
+
+/* ==========================================================================
+   Page Header with Actions
+   ========================================================================== */
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.page-header h1 {
+    margin: 0;
+    border: none;
+    padding: 0;
+}
+
+.header-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.search-input {
+    padding: 0.5rem 1rem;
+    background-color: var(--background-color);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-color);
+    min-width: 250px;
+}
+
+/* ==========================================================================
+   Forms (User Details, etc.)
+   ========================================================================== */
+
+.admin-form-container {
+    background-color: var(--surface-color);
+    padding: 2rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.admin-form-container h3 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 1rem;
+}
+
+.form-group { margin-bottom: 1.5rem; }
+.form-group label { display: block; margin-bottom: 0.5rem; color: var(--text-color-dark); }
+
+.form-group input, .form-group select {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: var(--background-color);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-color);
+    font-size: 1rem;
+}
+
+.form-group input:disabled { background-color: #2a2a4a; cursor: not-allowed; }
+
+.form-group-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 1.5rem 0;
+}
+.form-group-checkbox input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; }
+.form-group-checkbox label { margin-bottom: 0; color: var(--text-color); cursor: pointer; }
+
+
+/* ==========================================================================
+   Buttons & Actions
+   ========================================================================== */
+
+.btn-action {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: background-color 0.2s;
+}
+.btn-action:hover { background-color: var(--primary-color-light); }
+.btn-action i { margin-right: 0.4rem; }
+
+.btn-export {
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    color: var(--text-color-dark);
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: background-color 0.2s;
+}
+.btn-export:hover { background-color: var(--background-color); color: var(--text-color); }
+
+.admin-actions-grid {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+.admin-actions-grid button { flex-grow: 1; }
+
+/* ==========================================================================
+   Pagination
+   ========================================================================== */
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+}
+
+.pagination button {
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    padding: 0.6rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.pagination button:hover:not(:disabled) { background-color: var(--primary-color); color: white; }
+.pagination button:disabled { opacity: 0.4; cursor: not-allowed; }
+.pagination button.active { background-color: var(--primary-color); border-color: var(--primary-color-light); color: white; }
+.pagination span { color: var(--text-color-dark); padding: 0 0.5rem; }
+
+/* ==========================================================================
+   Filter Bar Styles
+   ========================================================================== */
+
+.filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.filter-btn {
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    color: var(--text-color-dark);
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: capitalize;
+    transition: all 0.2s ease-in-out;
+}
+
+.filter-btn:hover:not(.active) {
+    background-color: var(--surface-color-dark);
+    color: var(--text-color-light);
+}
+
+.filter-btn.active {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+    box-shadow: 0 4px 12px rgba(126, 34, 206, 0.3);
+}
+
+/* Table specific styles */
+.user-email-link {
+    color: var(--text-color); 
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.user-email-link:hover {
+    color: var(--primary-color-light); 
+    text-decoration: underline;
+}

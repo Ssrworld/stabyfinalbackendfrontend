@@ -1,0 +1,85 @@
+/* frontend/src/components/admin/SystemHealthMonitor.css */
+.health-monitor-container {
+    background-color: var(--surface-color);
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    margin-top: 2rem;
+}
+
+.health-monitor-container h3 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 1rem;
+}
+
+.health-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1.5rem;
+}
+
+.health-card {
+    background-color: var(--background-color);
+    padding: 1rem;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    text-align: center;
+}
+
+.service-name {
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.status-indicator {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+.status-indicator.ok { background-color: #4caf50; }
+.status-indicator.error { background-color: #f44336; }
+.status-indicator.late { background-color: #ff9800; }
+.status-indicator.unknown { background-color: #607d8b; animation: none; }
+
+.status-text {
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+.last-run {
+    font-size: 0.8rem;
+    color: var(--text-color-dark);
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(204,169,44, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(204,169,44, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(204,169,44, 0); }
+}
+
+.status-indicator.ok { animation-name: pulse-ok; }
+.status-indicator.error { animation-name: pulse-error; }
+.status-indicator.late { animation-name: pulse-late; }
+
+@keyframes pulse-ok { 0% { box-shadow: 0 0 0 0 #4caf50; } 70% { box-shadow: 0 0 0 10px rgba(76,175,80,0); } 100% { box-shadow: 0 0 0 0 rgba(76,175,80,0); } }
+@keyframes pulse-error { 0% { box-shadow: 0 0 0 0 #f44336; } 70% { box-shadow: 0 0 0 10px rgba(244,67,54,0); } 100% { box-shadow: 0 0 0 0 rgba(244,67,54,0); } }
+@keyframes pulse-late { 0% { box-shadow: 0 0 0 0 #ff9800; } 70% { box-shadow: 0 0 0 10px rgba(255,152,0,0); } 100% { box-shadow: 0 0 0 0 rgba(255,152,0,0); } }
+/* ... (मौजूदा CSS) ... */
+
+/* मेट्रिक्स कार्ड के लिए अतिरिक्त स्टाइल */
+.metric-card {
+    gap: 0.75rem;
+}
+
+.metric-value {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-color);
+}

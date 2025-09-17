@@ -1,0 +1,155 @@
+/* frontend/src/components/Hero.css (अपडेटेड) */
+
+.hero-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 6rem 2rem;
+  text-align: center;
+  min-height: 100vh; /* यह सुनिश्चित करता है कि यह पूरी स्क्रीन की ऊंचाई ले */
+  width: 100%;
+  color: white;
+  position: relative; /* एरो को पोजिशन करने के लिए */
+}
+
+.hero-content {
+  max-width: 800px;
+  z-index: 1; /* यह कंटेंट को बैकग्राउंड के ऊपर रखता है */
+}
+
+/* ... (बाकी सभी .hero-content, .subtitle, .btn-primary आदि स्टाइल यहाँ अपरिवर्तित रहेंगी) ... */
+
+.hero-main-logo {
+    width: 500px;
+    height: auto;
+    margin-bottom: 2rem;
+    opacity: 0.9;
+}
+
+.hero-content h1 {
+  font-size: 4rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.hero-content .highlight {
+  background: linear-gradient(45deg, var(--primary-color-light), var(--secondary-color));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-subheading {
+  font-size: 1.2rem;
+  color: var(--text-color);
+  margin-top: 1.5rem;
+  margin-bottom: -1rem;
+}
+
+.hero-subheading .bonus-amount {
+  font-weight: 700;
+  background: linear-gradient(45deg, var(--secondary-color), var(--primary-color-light));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+  font-size: 1.25rem;
+  font-weight: 500;
+  line-height: 1.6;
+  max-width: 600px;
+  margin: 2.5rem auto 2.5rem auto;
+  background: linear-gradient(45deg, #a0a0a0, #ffffff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 2.5rem;
+    flex-wrap: wrap;
+}
+
+.btn-primary, .btn-secondary {
+    padding: 0.8rem 2rem;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.3s ease;
+    border: none;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    color: white !important;
+    text-decoration: none;
+    box-shadow: 0 4px 15px rgba(126, 34, 206, 0.4);
+}
+
+.btn-primary:hover, .btn-secondary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(126, 34, 206, 0.6);
+}
+
+.scroll-down-arrow {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.5rem;
+    color: var(--text-color-dark);
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateX(-50%) translateY(0);
+    }
+    40% {
+        transform: translateX(-50%) translateY(-20px);
+    }
+    60% {
+        transform: translateX(-50%) translateY(-10px);
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-container {
+        padding: 4rem 1rem;
+    }
+    .hero-content h1 {
+        font-size: 2.5rem;
+    }
+    .hero-main-logo {
+        width: 120px;
+    }
+    .subtitle {
+        font-size: 1rem;
+    }
+    .hero-subheading {
+      font-size: 1rem;
+    }
+    .hero-buttons {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+    }
+    .btn-primary, .btn-secondary {
+        width: 100%;
+        max-width: 300px;
+    }
+}
+.hero-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 2.5rem;
+    flex-wrap: wrap; /* यह महत्वपूर्ण है ताकि बटन छोटी स्क्रीन पर अगली लाइन में चले जाएं */
+}

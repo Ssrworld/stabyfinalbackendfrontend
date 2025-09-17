@@ -1,0 +1,24 @@
+{
+  "name": "stablyaws-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Main project runner for Stabylink",
+  "scripts": {
+    "setup": "npm install --workspaces --if-present",
+    "dev": "concurrently \"npm run dev --workspace=backend\" \"npm run dev --workspace=frontend\"",
+    "build": "npm run build --workspace=frontend && node scripts/copyFrontendBuild.js",
+    "start": "npm run db:migrate && concurrently \"npm start --workspace=backend\" \"npm run automate --workspace=backend\"",
+    "db:migrate": "npx knex migrate:latest --knexfile ./backend/knexfile.js",
+    "db:seed": "npx knex seed:run --knexfile ./backend/knexfile.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "concurrently": "^8.2.2",
+    "qrcode": "^1.5.4"
+  },
+  "workspaces": [
+    "backend",
+    "frontend"
+  ]
+}

@@ -1,0 +1,120 @@
+# Render Blueprint Spec v1
+# This version corrects all known type and syntax issues for Stabylink.
+
+services:
+  # 1. PostgreSQL Database Service
+  - type: pserv
+    name: stabylink-db
+    plan: free
+    postgres:
+      version: 14
+
+  # 2. Backend API (Web Service)
+  - type: web
+    name: stabylink-backend
+    env: node
+    plan: free
+    rootDir: backend
+    buildCommand: "npm install && npx knex migrate:latest"
+    startCommand: "npm start"
+    envVars:
+      - key: DATABASE_URL
+        fromService:
+          type: pserv
+          name: stabylink-db
+          property: connectionString
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: 18
+      # --- Sensitive variables to be set in Render Dashboard ---
+      - key: JWT_SECRET
+        sync: false
+      - key: ENCRYPTION_PASSWORD
+        sync: false
+      - key: BSC_MAINNET_WSS_URL
+        sync: false
+      - key: PAYOUT_HOT_WALLET_MNEMONIC
+        sync: false
+      - key: COLD_STORAGE_WALLET_ADDRESS
+        sync: false
+      - key: USER_WALLETS_MASTER_MNEMONIC
+        sync: false
+      - key: EMAIL_HOST
+        sync: false
+      - key: EMAIL_PORT
+        sync: false
+      - key: EMAIL_SECURE
+        sync: false
+      - key: EMAIL_USER
+        sync: false
+      - key: EMAIL_PASS
+        sync: false
+      - key: EMAIL_FROM
+        sync: false
+      - key: ADMIN_BACKUP_EMAIL
+        sync: false
+
+  # 3. Automation Scripts (Background Worker)
+  - type: worker
+    name: stabylink-automation
+    env: node
+    plan: free
+    rootDir: backend
+    buildCommand: "npm install"
+    startCommand: "npm run automate"
+    envVars:
+      - key: DATABASE_URL
+        fromService:
+          type: pserv
+          name: stabylink-db
+          property: connectionString
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: 18
+      # --- Use an Environment Group in Render to link these secrets ---
+      - fromGroup: stabylink-secrets # Example group name
+
+  # 4. Frontend (Static Site) - Corrected Definition
+  - type: web
+    name: stabylink-frontend
+    env: static # This is the crucial part for a static site
+    rootDir: frontend
+    buildCommand: "npm run build"
+    staticPublishPath: dist # Correct key for static sites
+    routes:
+      - type: rewrite
+        source: "/*"
+        destination: "/index.html"
+
+# Environment Group (optional but recommended)
+envVarGroups:
+  - name: stabylink-secrets
+    envVars:
+      - key: JWT_SECRET
+        sync: false
+      - key: ENCRYPTION_PASSWORD
+        sync: false
+      - key: BSC_MAINNET_WSS_URL
+        sync: false
+      - key: PAYOUT_HOT_WALLET_MNEMONIC
+        sync: false
+      - key: COLD_STORAGE_WALLET_ADDRESS
+        sync: false
+      - key: USER_WALLETS_MASTER_MNEMONIC
+        sync: false
+      - key: EMAIL_HOST
+        sync: false
+      - key: EMAIL_PORT
+        sync: false
+      - key: EMAIL_SECURE
+        sync: false
+      - key: EMAIL_USER
+        sync: false
+      - key: EMAIL_PASS
+        sync: false
+      - key: EMAIL_FROM
+        sync: false
+      - key: ADMIN_BACKUP_EMAIL
+        sync: false

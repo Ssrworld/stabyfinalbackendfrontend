@@ -1,0 +1,57 @@
+.matrix-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1rem;
+    background-color: var(--surface-color-dark);
+    border-radius: 8px;
+}
+
+.matrix-level {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    width: 100%;
+}
+
+.matrix-node {
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: center;
+    min-width: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: var(--text-color-light);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.matrix-node:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.matrix-node i {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.matrix-node.parent { border-left: 4px solid #f39c12; }
+.matrix-node.current { border-left: 4px solid var(--primary-color); font-weight: bold; }
+.matrix-node.child.direct { border-left: 4px solid var(--success-color); }
+.matrix-node.child.spillover { border-left: 4px solid #3498db; }
+.matrix-node.empty { border-style: dashed; color: var(--text-color-dark); }
+
+.child-type {
+    font-size: 0.75rem;
+    background-color: var(--surface-color-dark);
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-top: 0.5rem;
+    font-weight: normal;
+}

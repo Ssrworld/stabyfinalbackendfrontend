@@ -1,0 +1,70 @@
+/* frontend/src/components/Features.css (FINAL CORRECTED CODE) */
+
+.features-section {
+  background-color: transparent;
+}
+
+.features-section h2, .features-section .section-subtitle {
+  text-align: center;
+}
+
+.features-section h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Note: .section-subtitle ab index.css se style ho raha hai */
+
+/* --- ✅ SAMADHAN: Grid ko Flexbox se badal diya gaya hai --- */
+.features-grid {
+  display: flex; /* Grid ki jagah Flex ka istemal karein */
+  flex-wrap: wrap; /* Items ko agli line me bhejein */
+  justify-content: center; /* Sabse zaroori: Items ko center me rakhein */
+  gap: 2rem;
+}
+
+.feature-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+  background: rgba(26, 26, 46, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 2rem;
+  border-radius: 12px;
+  border: 1px solid rgba(42, 42, 74, 0.7);
+  text-align: left;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  
+  /* --- ✅ SAMADHAN: Flex items ke liye width set karein --- */
+  width: 100%;
+  max-width: 350px; /* Card ki maximum चौड़ाई */
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 198, 255, 0.15);
+}
+
+.feature-icon {
+  font-size: 1.5rem;
+  margin-top: 0.25rem;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+.feature-text h3 {
+  font-size: 1.5rem;
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+  color: var(--text-color);
+}
+
+.feature-text p {
+  color: var(--text-color-dark);
+  line-height: 1.6;
+  margin: 0;
+}

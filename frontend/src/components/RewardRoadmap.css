@@ -1,0 +1,160 @@
+/* frontend/src/components/RewardRoadmap.css */
+
+.pool-roadmap-container {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem 1rem;
+  margin-top: 1rem;
+}
+
+.roadmap-line {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background-color: var(--border-color);
+  transform: translateY(-50%);
+  z-index: 1;
+}
+
+.roadmap-node {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+}
+
+.node-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  border: 3px solid var(--border-color);
+}
+
+/* Node Status Styles */
+.roadmap-node.upcoming .node-circle {
+  background-color: var(--surface-color);
+  color: var(--text-color-dark);
+}
+
+.roadmap-node.active .node-circle {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color-light);
+  color: white;
+  transform: scale(1.2);
+  box-shadow: 0 0 15px var(--primary-color);
+}
+
+.roadmap-node.completed .node-circle {
+  background: linear-gradient(45deg, #28a745, #218838);
+  border-color: #28a745;
+  color: white;
+  font-size: 1.2rem;
+}
+
+/* Tooltip Styles */
+.node-tooltip {
+  position: absolute;
+  bottom: 120%;
+  background-color: var(--background-color);
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.node-tooltip span {
+  font-size: 0.8rem;
+  color: var(--text-color-dark);
+}
+.node-tooltip strong {
+  font-size: 1rem;
+  color: var(--primary-color-light);
+}
+
+.roadmap-node:hover .node-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* --- Responsive Design for Mobile (Vertical Roadmap) --- */
+@media (max-width: 768px) {
+  .pool-roadmap-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2.5rem;
+    padding: 2rem 0;
+    margin-left: 1rem;
+  }
+
+  /* Hide the horizontal line on mobile */
+  .roadmap-line {
+    display: none;
+  }
+
+  .roadmap-node {
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  /* Create a vertical line on mobile using a pseudo-element */
+  .roadmap-node::before {
+    content: '';
+    position: absolute;
+    top: 40px; /* Start below the circle */
+    left: 18px; /* Center with the circle */
+    width: 4px;
+    height: 2.5rem; /* Equal to the container's gap */
+    background-color: var(--border-color);
+    z-index: 1;
+  }
+  
+  /* Remove the line from the last node */
+  .roadmap-node:last-child::before {
+      display: none;
+  }
+  
+  /* Color the line for completed nodes */
+  .roadmap-node.completed + .roadmap-node::before,
+  .roadmap-node.active::before {
+      background-color: #28a745;
+  }
+
+  /* Reposition the tooltip for mobile */
+  .node-tooltip {
+    position: static;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    background: none;
+    border: none;
+    padding: 0;
+    text-align: left;
+    align-items: flex-start;
+  }
+  
+  .node-tooltip span { font-size: 0.9rem; }
+  .node-tooltip strong { font-size: 1.1rem; }
+}

@@ -1,0 +1,194 @@
+/* frontend/src/components/admin/AdminLayout.css (FIXED) */
+
+/* --- समाधान: मुख्य लेआउट को पूरी ऊंचाई दें और स्क्रॉलिंग रोकें --- */
+.admin-layout {
+    display: flex;
+    height: 100vh; /* पूरी स्क्रीन की ऊंचाई */
+    overflow: hidden; /* इस कंटेनर पर स्क्रॉलिंग बंद करें */
+    background-color: var(--background-color);
+}
+
+/* --- समाधान: साइडबार को फिक्स करें --- */
+.admin-sidebar {
+    width: 260px;
+    background-color: var(--surface-color);
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    transition: width 0.3s ease, min-width 0.3s ease; /* स्मूथ ट्रांजीशन */
+    flex-shrink: 0; /* साइडबार को सिकुड़ने से रोकें */
+    height: 100%;
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    flex-shrink: 0;
+}
+
+.sidebar-title {
+    margin: 0;
+    font-size: 1.2rem;
+    white-space: nowrap;
+    overflow: hidden; /* टेक्स्ट को छिपाएं जब साइडबार छोटा हो */
+}
+
+.sidebar-toggle {
+    background: none;
+    border: 1px solid var(--border-color);
+    color: var(--text-color-dark);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+/* --- समाधान: नेविगेशन को स्क्रॉल करने योग्य बनाएं --- */
+.admin-nav {
+    flex-grow: 1;
+    overflow-y: auto; /* यदि लिंक ज्यादा हों तो नेविगेशन को स्क्रॉल करने दें */
+    overflow-x: hidden;
+    padding: 1rem 0;
+}
+
+.admin-nav a {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.8rem 1.5rem;
+    color: var(--text-color-dark);
+    text-decoration: none;
+    border-left: 3px solid transparent;
+    transition: background-color 0.2s, color 0.2s;
+    white-space: nowrap;
+}
+
+.admin-nav a:hover {
+    background-color: #2a2a4a; /* var(--surface-color-dark); */
+}
+
+.admin-nav a.active {
+    background-color: rgba(126, 34, 206, 0.1); /* var(--primary-color-dark); */
+    color: white; /* var(--text-color-light); */
+    border-left-color: var(--primary-color);
+}
+
+.admin-nav a i {
+    width: 20px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.sidebar-footer {
+    padding: 1.5rem;
+    border-top: 1px solid var(--border-color);
+    flex-shrink: 0;
+}
+
+.logout-button {
+    width: 100%;
+    padding: 0.8rem;
+    background-color: #2a2a4a; /* var(--surface-color-dark); */
+    border: 1px solid var(--border-color);
+    color: white; /* var(--text-color-light); */
+    border-radius: 6px;
+    cursor: pointer;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+/* --- समाधान: मुख्य कंटेंट को स्क्रॉल करने योग्य बनाएं --- */
+.admin-main-content-wrapper {
+    flex-grow: 1;
+    overflow-y: auto; /* केवल इस हिस्से को स्क्रॉल करने दें */
+    height: 100vh;
+    position: relative;
+}
+
+.admin-main-content {
+    padding: 2rem;
+    width: 100%;
+}
+
+
+/* --- समाधान: साइडबार छोटा होने पर स्टाइल --- */
+.admin-layout.sidebar-closed .admin-sidebar {
+    width: 80px;
+}
+.admin-layout.sidebar-closed .sidebar-title,
+.admin-layout.sidebar-closed .admin-nav span,
+.admin-layout.sidebar-closed .logout-button span {
+    display: none;
+}
+.admin-layout.sidebar-closed .sidebar-header,
+.admin-layout.sidebar-closed .admin-nav a,
+.admin-layout.sidebar-closed .logout-button {
+    justify-content: center;
+}
+.admin-layout.sidebar-closed .sidebar-toggle {
+    display: block; /* सुनिश्चित करें कि यह दिखे */
+}
+
+
+/* --- समाधान: मोबाइल के लिए Responsive स्टाइल --- */
+.mobile-menu-toggle {
+    display: none; /* डेस्कटॉप पर छिपाएं */
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 1001;
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.mobile-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 999;
+}
+
+@media (max-width: 992px) {
+    .mobile-menu-toggle {
+        display: block; /* मोबाइल पर दिखाएं */
+    }
+    .sidebar-toggle {
+        display: none; /* डेस्कटॉप वाला टॉगल छिपाएं */
+    }
+    .admin-sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        z-index: 1000;
+        transform: translateX(-100%); /* स्क्रीन से बाहर छिपाएं */
+        transition: transform 0.3s ease-in-out;
+    }
+    .admin-layout.mobile-sidebar-open .admin-sidebar {
+        transform: translateX(0); /* स्क्रीन पर लाएं */
+    }
+    .admin-layout.mobile-sidebar-open .mobile-overlay {
+        display: block; /* ओवरले दिखाएं */
+    }
+    .admin-main-content {
+        padding: 5rem 1rem 2rem 1rem; /* हैमबर्गर बटन के लिए जगह बनाएं */
+    }
+}

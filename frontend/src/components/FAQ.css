@@ -1,0 +1,60 @@
+/* frontend/src/components/FAQ.css (FINAL CORRECTED CODE) */
+
+.faq-section {
+    /* --- ✅ SAMADHAN 1: Yahaan se extra padding hata di gayi hai --- */
+    /* Ab spacing sirf HomePage.jsx ke .section-container se aayegi */
+    text-align: center;
+}
+
+.faqs {
+    max-width: 800px;
+    margin: 2rem auto 0;
+    text-align: left;
+}
+
+.faq {
+    background-color: var(--surface-color);
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+.faq.open {
+    border-color: var(--primary-color);
+}
+
+.faq-question {
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.faq-question i {
+    transition: transform 0.3s ease-in-out;
+}
+
+.faq.open .faq-question i {
+    transform: rotate(180deg);
+}
+
+.faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    padding: 0 1.5rem;
+    line-height: 1.7;
+    color: var(--text-color-dark);
+    transition: max-height 0.4s ease-in-out, padding 0.4s ease-in-out;
+}
+
+/* --- ✅ SAMADHAN 2: max-height ko badha diya gaya hai --- */
+.faq.open .faq-answer {
+    /* Height ko ek badi value de dein taaki lamba content bhi fit ho jaaye */
+    max-height: 1000px; 
+    padding: 0 1.5rem 1.5rem;
+}

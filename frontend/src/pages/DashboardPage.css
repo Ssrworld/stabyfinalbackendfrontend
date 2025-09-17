@@ -1,0 +1,317 @@
+/* frontend/src/pages/DashboardPage.css (REVERTED TO ORIGINAL STATE) */
+
+/* --- मुख्य कंटेनर को ट्रांसपेरेंट बनाएं --- */
+.dashboard-container {
+  width: 100%;
+  min-height: calc(100vh - 80px); /* हेडर की ऊंचाई के लिए एडजस्ट करें */
+  background: transparent; /* सुनिश्चित करें कि कोई बैकग्राउंड कलर न हो */
+}
+
+/* ओवरले कंटेनर जिसमें सारा कंटेंट है */
+.dashboard-overlay {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+.welcome-message { 
+  color: var(--text-color-dark); 
+  margin-bottom: 2rem; 
+  font-size: 1.2rem;
+}
+
+/* एक्टिवेशन कार्ड ग्रिड */
+.activation-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+.activation-grid .info-card-content {
+    align-items: center;
+}
+
+/* मुख्य डैशबोर्ड ग्रिड */
+.dashboard-grid { 
+    display: grid; 
+    grid-template-columns: 1fr;
+    gap: 1.5rem; 
+}
+@media (min-width: 640px) {
+    .dashboard-grid {
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    }
+}
+@media (min-width: 992px) {
+    .dashboard-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* --- जानकारी वाले कार्ड्स की स्टाइलिंग --- */
+.info-card { 
+  background: rgba(26, 26, 46, 0.7); /* सेमी-ट्रांसपेरेंट बैकग्राउंड */
+  backdrop-filter: blur(5px); 
+  padding: 1.5rem; 
+  border-radius: 12px; 
+  display: flex; 
+  flex-direction: column; 
+  border: 1px solid var(--border-color); 
+}
+
+.info-card-header { 
+  display: flex; 
+  align-items: center; 
+  gap: 0.75rem; 
+  color: var(--text-color-dark); 
+}
+
+.info-card-header h4,
+.accordion-title h4 {
+  margin-bottom: 0;
+  font-weight: 700;
+  font-size: 1.2rem;
+  background: linear-gradient(45deg, var(--primary-color-light), var(--secondary-color));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+.info-card-content { 
+  flex-grow: 1; 
+  padding-top: 0.5rem; 
+  display: flex; 
+  flex-direction: column;
+}
+
+.info-card-content p { 
+  font-size: 1.8rem; 
+  font-weight: 600; 
+  margin-top: 0.5rem; 
+}
+
+.info-card-content p span { 
+  font-weight: normal; 
+  margin-right: 0.25rem; 
+  font-size: 1.5rem; 
+  color: var(--text-color-dark); 
+}
+
+.info-card.full-width { 
+    grid-column: 1 / -1; 
+}
+
+.reward-potential { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; gap: 0.75rem; color: #ffcc00; font-weight: 600; font-size: 0.9rem; }
+.reward-potential .fa-trophy { font-size: 1.2rem; }
+.info-card-description { font-size: 0.9rem !important; color: var(--text-color-dark); line-height: 1.5; margin-bottom: 1rem; }
+.card-actions { margin-top: auto; padding-top: 1rem; border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; gap: 1rem; }
+.card-actions .btn-secondary, .card-actions .btn-primary { margin-top: 0; align-self: stretch; flex-grow: 1; padding: 0.5rem 1rem; }
+.card-actions .btn-secondary { background: none; border: 1px solid var(--border-color); color: var(--text-color); display: flex; align-items: center; gap: 0.5rem; justify-content: center; }
+.card-actions .btn-primary:disabled { background: var(--surface-color); border: 1px solid var(--border-color); color: var(--text-color-dark); cursor: not-allowed; box-shadow: none; transform: none; }
+.empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem; text-align: center; color: var(--text-color-dark); }
+.empty-state .fa-solid { font-size: 3rem; margin-bottom: 1rem; opacity: 0.3; }
+.status-badge { padding: 0.25rem 0.75rem; border-radius: 50px; font-size: 0.8rem; font-weight: 600; text-transform: capitalize; }
+.status-badge.verified, .status-badge.active, .status-badge.completed, .status-badge.transferred { background-color: rgba(76, 175, 80, 0.2); color: #81c784; }
+.status-badge.pending, .status-badge.unclaimed, .status-badge.pending-transfer { background-color: rgba(255, 193, 7, 0.2); color: #ffd54f; }
+.status-badge.failed { background-color: rgba(244, 67, 54, 0.2); color: #e57373; }
+.copy-icon-btn { background: var(--primary-color); color: white; border: none; padding: 0.6rem 0.8rem; border-radius: 6px; cursor: pointer; font-size: 1rem; }
+.copy-icon-btn:disabled { background: var(--border-color); cursor: not-allowed; }
+.wallet-address-display { display: flex; align-items: center; gap: 0.75rem; background: var(--background-color); padding: 0.8rem 1rem; border-radius: 8px; margin: auto 0 1rem 0; }
+.chain-logo { width: 24px; height: 24px; }
+.wallet-address-display span { font-family: monospace; font-size: 1.1rem; flex-grow: 1; word-break: break-all; }
+.wallet-address.large.empty { margin: auto 0 1rem 0; text-align: center; color: var(--text-color-dark); }
+.copy-icon-btn.minimal { background: none; padding: 0.5rem; }
+.copy-icon-btn.minimal:hover { background-color: var(--surface-color); }
+.referral-stat { font-size: 1rem; color: var(--text-color-dark); text-align: center; margin-bottom: 1.5rem; }
+.referral-stat strong { color: var(--primary-color-light); font-size: 1.2rem; }
+.referral-link-container { display: flex; justify-content: space-between; align-items: center; background: var(--background-color); border-radius: 6px; padding: 0.75rem 1rem; margin-bottom: 1.5rem; }
+.referral-link-text { font-size: 0.9rem; word-break: break-all; margin-right: 0.5rem; }
+.share-actions { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; margin-top: auto; padding-top: 1rem; border-top: 1px solid var(--border-color); }
+.social-share-buttons { display: flex; gap: 1.5rem; }
+.social-share-buttons a { font-size: 1.8rem; color: var(--text-color-dark); transition: color 0.3s ease, transform 0.3s ease; }
+.social-share-buttons a:hover { color: var(--primary-color-light); transform: scale(1.1); }
+.history-accordions { margin-top: 2rem; display: flex; flex-direction: column; gap: 1rem; }
+.accordion-item { background: rgba(26, 26, 46, 0.7); backdrop-filter: blur(5px); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; transition: background-color 0.3s; }
+.accordion-header { width: 100%; background: none; border: none; color: var(--text-color); display: flex; justify-content: space-between; align-items: center; padding: 1.5rem; cursor: pointer; font-family: var(--font-family); }
+.accordion-title { display: flex; align-items: center; gap: 0.75rem; font-size: 1.1rem; }
+.accordion-badge { background-color: var(--primary-color); color: white; font-size: 0.8rem; padding: 0.2rem 0.6rem; border-radius: 50px; }
+.accordion-arrow { transition: transform 0.3s ease-in-out; }
+.accordion-arrow.open { transform: rotate(180deg); }
+.accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-in-out; }
+.accordion-content.open { max-height: 1000px; }
+.accordion-content .info-card.inside-accordion { border: none; border-radius: 0; padding: 0; border-top: 1px solid var(--border-color); background: transparent; backdrop-filter: none; }
+.loading-text { padding: 1.5rem; color: var(--text-color-dark); }
+.table-container { overflow-x: auto; }
+.data-table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+.data-table th, .data-table td { padding: 0.8rem 1rem; text-align: left; border-bottom: 1px solid var(--border-color); white-space: nowrap; }
+.data-table th { color: var(--text-color-dark); font-weight: 500; font-size: 0.9rem; }
+.data-table tr:last-child td { border-bottom: none; }
+.data-table a { color: var(--secondary-color); text-decoration: none; transition: color 0.2s; }
+.data-table a:hover { color: var(--primary-color-light); text-decoration: underline; }
+.protocol-stats-container { display: flex; flex-direction: column; justify-content: space-around; align-items: center; height: 100%; gap: 1.5rem; padding: 1rem 0; }
+.protocol-stat-item { display: flex; flex-direction: column; align-items: center; text-align: center; }
+.protocol-stat-value { font-size: 2.5rem; font-weight: 700; line-height: 1.1; background: -webkit-linear-gradient(45deg, var(--primary-color-light), var(--secondary-color)); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; }
+.protocol-stat-label { margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-color-dark); }
+.activation-status { margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); width: 100%; text-align: center; }
+.activation-status p { font-size: 1.1rem; margin-bottom: 1rem; color: var(--text-color); }
+.activation-status p strong { color: #4dff88; font-size: 1.2rem; }
+.activate-btn { width: 100%; max-width: 300px; padding: 1rem 2rem !important; font-size: 1.1rem !important; border-radius: 50px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; border: none; background: linear-gradient(90deg, var(--primary-color), var(--secondary-color)); color: white; box-shadow: 0 4px 15px rgba(126, 34, 206, 0.4); }
+.activate-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(126, 34, 206, 0.6); }
+.activate-btn:disabled { background: var(--surface-color) !important; border: 1px solid var(--border-color) !important; color: var(--text-color-dark) !important; cursor: not-allowed; box-shadow: none !important; transform: none !important; }
+.reward-progress-bar { width: 100%; height: 10px; background-color: var(--background-color); border-radius: 5px; margin: 1rem 0 0.5rem; overflow: hidden; }
+.reward-progress-fill { height: 100%; background: linear-gradient(90deg, var(--primary-color), var(--secondary-color)); border-radius: 5px; transition: width 0.5s ease-in-out; }
+.reward-progress-text { text-align: center; font-size: 0.9rem !important; color: var(--text-color-dark); }
+.stbl-balance-value { font-size: 2.5rem !important; }
+.contract-address-container { background-color: var(--background-color); padding: 0.5rem 1rem; border-radius: 6px; font-family: monospace; font-size: 0.9rem; text-align: center; margin-top: 1rem; }
+.claim-status { font-weight: bold; text-align: center; margin-top: 1rem; padding: 0.5rem; border-radius: 6px; }
+.claim-status.pending { color: #ffd54f; background-color: rgba(255, 193, 7, 0.1); }
+.claim-status.transferred { color: #81c784; background-color: rgba(76, 175, 80, 0.1); }
+.claim-status.failed { color: #e57373; background-color: rgba(244, 67, 54, 0.1); }
+/* Combined Card Styles */
+.combined-card-content { display: flex; justify-content: space-around; align-items: stretch; gap: 1.5rem; width: 100%; flex-wrap: wrap; }
+.stat-item { flex: 1; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 0.75rem; padding: 1rem; min-width: 200px; }
+.stat-item-header { display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: var(--text-color-dark); font-weight: 500; }
+.stat-item-value { font-size: 1.8rem; font-weight: 600; color: var(--text-color); }
+.stat-item.with-button { gap: 1rem; }
+.stat-item.with-button .btn-primary { width: 100%; margin-top: auto; padding-top: 0.8rem; padding-bottom: 0.8rem; }
+.stat-item:not(:last-child) { border-right: 1px solid var(--border-color); }
+.info-card:has(.stat-item:nth-child(3)) .stat-item:not(:last-child) { border-right: 1px solid var(--border-color); }
+@media (max-width: 768px) {
+    .stat-item:not(:last-child) { border-right: none; border-bottom: 1px solid var(--border-color); }
+    .combined-card-content { flex-direction: column; gap: 1rem; }
+}
+
+/* ============================================== */
+/* === STBL TOKEN CARD के लिए नई बेहतर स्टाइल === */
+/* ============================================== */
+
+/* ट्रांसफर होने पर दिखने वाले मुख्य बॉक्स की स्टाइल */
+.token-import-details {
+  text-align: center;
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  background-color: rgba(30, 48, 77, 0.3); /* हल्का नीला-हरा बैकग्राउंड */
+  border: 1px solid var(--border-color);
+  border-left: 4px solid #4dff88; /* बाईं ओर एक सफल एक्सेंट बॉर्डर */
+  border-radius: 8px;
+}
+
+/* बॉक्स के टाइटल (✓ Tokens Transferred!) की स्टाइल */
+.token-import-details h4 {
+  color: #4dff88; /* चमकदार हरा रंग */
+  margin: 0 0 10px 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+/* टाइटल में चेक मार्क आइकन जोड़ने के लिए */
+.token-import-details h4::before {
+  content: '\f00c'; /* Font Awesome चेक आइकन */
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 900;
+}
+
+/* बॉक्स के अंदर के पैराग्राफ की स्टाइल */
+.token-import-details p {
+  font-size: 0.9rem !important;
+  margin: 0 auto 1.5rem auto !important;
+  max-width: 95%;
+  color: var(--text-color-dark) !important;
+  line-height: 1.6;
+}
+
+/* नेटवर्क, सिंबल, कॉन्ट्रैक्ट आदि दिखाने वाले ग्रिड की स्टाइल */
+.token-info-grid {
+  text-align: left;
+  display: grid;
+  grid-template-columns: 100px 1fr; /* लेबल और वैल्यू के लिए कॉलम */
+  gap: 1rem;
+  align-items: center;
+}
+
+/* ग्रिड के लेबल (जैसे "Network:") की स्टाइल */
+.token-info-grid strong {
+  color: var(--text-color-dark);
+  font-weight: 600;
+}
+
+/* ग्रिड की वैल्यू (जैसे "BSC") की स्टाइल */
+.token-info-grid span {
+    color: var(--text-color);
+    font-weight: 500;
+}
+
+/* कॉन्ट्रैक्ट एड्रेस वाले रो के लिए कंटेनर की स्टाइल */
+.token-contract-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--background-color);
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+}
+
+.token-contract-row span {
+  font-family: monospace;
+  font-size: 0.9rem;
+  word-break: break-all; /* लंबा एड्रेस टूटने के लिए */
+}
+
+/* कॉन्ट्रैक्ट एड्रेस वाले लेबल को ऊपर अलाइन करने के लिए */
+.token-info-grid strong.align-top {
+    align-self: start;
+    padding-top: 0.5rem;
+}
+/* ======================================================= */
+/* === STBL TOKEN CARD के लिए मोबाइल व्यू का सुधार (FIX) === */
+/* ======================================================= */
+
+/* 600px से कम चौड़ाई वाली स्क्रीन के लिए ये स्टाइल लागू होंगे */
+@media (max-width: 600px) {
+
+    /* मुख्य जानकारी वाले बॉक्स पर पैडिंग थोड़ी कम करें ताकि जगह बने */
+    .token-import-details {
+        padding: 1.2rem 1rem;
+    }
+
+    /* --- यह सबसे ज़रूरी बदलाव है --- */
+    /* ग्रिड को दो कॉलम से बदलकर एक कॉलम का लेआउट बनाएं */
+    .token-info-grid {
+        /* पहले यह 'grid-template-columns: 100px 1fr;' था */
+        grid-template-columns: 1fr; /* अब लेबल और वैल्यू एक के नीचे एक आएंगे */
+        gap: 0.4rem; /* लेबल (जैसे "Network:") और वैल्यू (जैसे "BSC") के बीच का गैप */
+        row-gap: 1rem; /* हर जानकारी (जैसे Network, Symbol) के बीच का गैप */
+    }
+
+    /* लेबल (जैसे "Network:", "Symbol:") की स्टाइल थोड़ी बदलें */
+    .token-info-grid strong {
+        color: var(--text-color-dark);
+        font-size: 0.9rem;
+    }
+
+    /* "Contract:" लेबल के ऊपर की अतिरिक्त पैडिंग हटाएं जो डेस्कटॉप के लिए थी */
+    .token-info-grid strong.align-top {
+        padding-top: 0;
+    }
+
+    /* कॉन्ट्रैक्ट एड्रेस और कॉपी बटन को ठीक से दिखाएं */
+    .token-contract-row {
+        padding: 0.6rem 0.8rem;
+    }
+
+    /* कॉन्ट्रैक्ट एड्रेस का फॉन्ट साइज थोड़ा छोटा करें */
+    .token-contract-row span {
+        font-size: 0.85rem;
+    }
+
+    /* टाइटल (Tokens Transferred) का फॉन्ट साइज एडजस्ट करें */
+    .token-import-details h4 {
+        font-size: 1.1rem;
+    }
+}

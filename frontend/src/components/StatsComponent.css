@@ -1,0 +1,52 @@
+/* frontend/src/components/StatsComponent.css (FINAL CODE) */
+
+.stats-container {
+  /* --- ✅ SAMADHAN: Padding yahaan se hata di gayi hai --- */
+  text-align: center;
+}
+
+.stats-container.loading {
+  color: var(--text-color-dark);
+}
+
+.stats-container h2 {
+  font-size: 2.5rem;
+  margin-bottom: 3rem;
+  color: var(--text-color);
+  font-weight: 600;
+}
+
+.stats-grid {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.stat-card {
+  background-color: rgba(26, 26, 46, 0.7);
+  backdrop-filter: blur(5px);
+  padding: 1.5rem 2.5rem;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 280px;
+}
+
+.stat-value {
+  font-size: 3rem;
+  font-weight: 700;
+  background: -webkit-linear-gradient(45deg, var(--primary-color-light), var(--secondary-color));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+.stat-label {
+  margin-top: 0.5rem;
+  font-size: 1.1rem;
+  color: var(--text-color-dark);
+}

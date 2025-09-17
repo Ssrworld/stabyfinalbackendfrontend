@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+/backend/node_modules
+/frontend/node_modules
+
+# Environment Variables
+.env
+/backend/.env
+/frontend/.env
+
+# Logs and OS files
+*.log
+.DS_Store
+
+# Build output
+/frontend/dist
+/backend/dist
+/backend/public  # --- समाधान: इस लाइन को जोड़ा गया है ---
+
+# IDE files
+.idea/
+.vscode/

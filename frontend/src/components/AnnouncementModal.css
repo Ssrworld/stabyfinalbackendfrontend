@@ -1,0 +1,35 @@
+.modal-overlay-announcement {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+    display: flex; justify-content: center; align-items: center;
+    z-index: 1000; animation: fadeIn 0.3s ease-in-out;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.modal-content-announcement {
+    background-color: var(--surface-color); border-radius: 12px;
+    width: 90%; max-width: 600px; max-height: 90vh;
+    border: 1px solid var(--border-color);
+    display: flex; flex-direction: column; position: relative;
+    animation: slideUp 0.4s ease-out;
+}
+@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.close-btn-announcement {
+    position: absolute; top: 10px; right: 10px;
+    background: rgba(0,0,0,0.3); border: none; color: white;
+    width: 30px; height: 30px; border-radius: 50%;
+    cursor: pointer; font-size: 1rem;
+    display: flex; justify-content: center; align-items: center; z-index: 10;
+}
+.modal-image-announcement {
+    width: 100%; height: 250px; object-fit: cover;
+    border-top-left-radius: 12px; border-top-right-radius: 12px;
+}
+.modal-text-content { padding: 1.5rem; overflow-y: auto; flex-grow: 1; }
+.modal-text-content h2 { margin: 0 0 0.5rem 0; font-size: 1.8rem; }
+.modal-date-announcement { font-size: 0.9rem; color: var(--text-color-dark); margin-bottom: 1.5rem; }
+.modal-body-announcement { font-size: 1rem; line-height: 1.7; }
+.modal-body-announcement p, .modal-body-announcement ul, .modal-body-announcement li { margin-bottom: 1rem; }
+.modal-body-announcement pre { background-color: var(--background-color); padding: 1rem; border-radius: 6px; white-space: pre-wrap; word-break: break-all; font-size: 0.9rem; }
+.modal-controls-announcement { display: flex; justify-content: center; align-items: center; gap: 1.5rem; padding: 1rem; border-top: 1px solid var(--border-color); }
+.modal-controls-announcement button { background: none; border: none; color: var(--text-color-dark); font-size: 1.2rem; cursor: pointer; }
