@@ -1,4 +1,4 @@
-// backend/src/controllers/user.controller.js (UPDATED with source_wallet AND withdrawal fix)
+// backend/src/controllers/user.controller.js (FINAL VERSION WITH ALL UPDATES)
 
 const db = require('../config/db.config');
 const { sendWithdrawalRequestEmail } = require('../services/email.service');
@@ -6,7 +6,6 @@ const bcrypt = require('bcryptjs');
 const { sanitize } = require('../services/sanitizer.service');
 const userService = require('../services/user.service');
 
-// getDashboardData, activateAccount functions remain unchanged...
 exports.getDashboardData = async (req, res) => {
     try {
         const user = await db('users')
@@ -170,7 +169,7 @@ exports.transferFunds = async (req, res) => {
     }
 };
 
-// --- THIS IS THE UPDATED requestWithdrawal FUNCTION ---
+// --- ✅ THIS FUNCTION IS NOW CORRECT AND DOES NOT CREDIT THE FEE ---
 exports.requestWithdrawal = async (req, res) => {
     const requestedAmount = parseFloat(req.body.amount);
     const ADMIN_WITHDRAWAL_FEE_PERCENT = 10;
@@ -228,8 +227,6 @@ exports.requestWithdrawal = async (req, res) => {
                 admin_fee: adminFee,
                 final_amount: finalAmountToSend
             });
-            
-            // NOTE: The line to credit admin_earnings has been REMOVED from here.
         });
 
         await sendWithdrawalRequestEmail(req.user.email, requestedAmount);
@@ -240,7 +237,7 @@ exports.requestWithdrawal = async (req, res) => {
     }
 };
 
-// All other functions (claimStblReward, updatePayoutWallet, history endpoints, etc.) remain unchanged...
+// ... (rest of the file is unchanged and correct)
 exports.claimStblReward = async (req, res) => {
     const { walletAddress } = req.body;
     const userId = req.user.id;

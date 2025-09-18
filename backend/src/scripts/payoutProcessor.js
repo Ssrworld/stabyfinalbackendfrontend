@@ -1,4 +1,4 @@
-// backend/src/scripts/payoutProcessor.js (UPDATED with fee crediting logic)
+// backend/src/scripts/payoutProcessor.js (FINAL AND CORRECTED WITH TYPE PARSING)
 
 const path = require('path');
 if (process.env.NODE_ENV !== 'production') {
@@ -39,14 +39,19 @@ async function processPayouts() {
             const usdtContract = new ethers.Contract(USDT_CONTRACT_ADDRESS, ['function transfer(address to, uint amount) returns (bool)'], hotWallet);
 
             for (const wd of pendingWithdrawals) {
+                // ✅✅✅ BUG FIX: Convert string decimals from DB to actual numbers first ✅✅✅
+                const requestedAmount = parseFloat(wd.amount);
+                const finalAmount = parseFloat(wd.final_amount);
+                const adminFee = parseFloat(wd.admin_fee);
+
                 try {
                     if (!wd.payout_wallet || !ethers.isAddress(wd.payout_wallet)) {
                         throw new Error(`Invalid or missing payout wallet for user ID ${wd.user_id}.`);
                     }
 
-                    const amountToSend = ethers.parseUnits(wd.final_amount.toString(), USDT_DECIMALS);
+                    const amountToSend = ethers.parseUnits(finalAmount.toString(), USDT_DECIMALS);
                     
-                    console.log(`[Payout] Processing withdrawal ID ${wd.id}: Sending ${wd.final_amount} USDT to ${wd.payout_wallet}`);
+                    console.log(`[Payout] Processing withdrawal ID ${wd.id}: Sending ${finalAmount.toFixed(2)} USDT to ${wd.payout_wallet}`);
 
                     const tx = await usdtContract.transfer(wd.payout_wallet, amountToSend);
                     await tx.wait();
@@ -57,19 +62,19 @@ async function processPayouts() {
                         tx_hash: tx.hash
                     });
                     
-                    // ✅✅✅ THIS IS THE CRITICAL FIX ✅✅✅
-                    // Credit the fee to the admin ONLY after a successful transaction
-                    if (wd.admin_fee > 0) {
+                    if (adminFee > 0) {
                         await trx('admin_earnings').insert({
                             user_id: wd.user_id,
                             type: 'WITHDRAWAL_FEE',
-                            amount: wd.admin_fee,
-                            notes: `Fee for successful withdrawal #${wd.id} of $${wd.amount}`
+                            amount: adminFee,
+                            notes: `Fee for successful withdrawal #${wd.id} of $${requestedAmount.toFixed(2)}`
                         });
-                        console.log(`[Payout] ✅ CREDITED: Admin earned $${wd.admin_fee.toFixed(2)} fee for withdrawal ID ${wd.id}.`);
+                        // ✅ Now this will work because 'adminFee' is a number
+                        console.log(`[Payout] ✅ CREDITED: Admin earned $${adminFee.toFixed(2)} fee for withdrawal ID ${wd.id}.`);
                     }
                     
-                    await sendWithdrawalSuccessEmail(wd.email, wd.amount, wd.final_amount, wd.admin_fee, tx.hash);
+                    // ✅ Pass the numeric values to the email function
+                    await sendWithdrawalSuccessEmail(wd.email, requestedAmount, finalAmount, adminFee, tx.hash);
                     console.log(`[Payout] ✅ SUCCESS: Withdrawal ID ${wd.id} completed. Tx: ${tx.hash}`);
 
                 } catch (error) {
@@ -84,10 +89,13 @@ async function processPayouts() {
                         status: 'FAILED',
                         completed_at: new Date()
                     });
-                    await trx('users').where('id', wd.user_id).increment('withdrawable_balance', wd.amount);
-                    console.log(`[Payout] 🔄 REFUNDED: User ${wd.user_id} refunded ${wd.amount}.`);
                     
-                    await sendWithdrawalFailedEmail(wd.email, wd.amount);
+                    // ✅ Use the numeric value for the refund
+                    await trx('users').where('id', wd.user_id).increment('withdrawable_balance', requestedAmount);
+                    console.log(`[Payout] 🔄 REFUNDED: User ${wd.user_id} refunded ${requestedAmount.toFixed(2)}.`);
+                    
+                    // ✅ Pass the numeric value to the email function
+                    await sendWithdrawalFailedEmail(wd.email, requestedAmount);
                 }
             }
         });
